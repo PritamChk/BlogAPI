@@ -46,3 +46,30 @@ class BloggerAdmin(UserAdmin):
 
     prepopulated_fields = {"username": ("last_name", "first_name")}
     raw_id_fields = ('groups', 'user_permissions')
+
+@admin.register(Blog)
+class BlogAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'title',
+        'description',
+        'created_at',
+        'updated_at',
+        'creator',
+    )
+    list_filter = ('created_at', 'updated_at', 'creator')
+    date_hierarchy = 'created_at'
+
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'boktobyo',
+        'created_at',
+        'updated_at',
+        'commentor',
+        'blog',
+    )
+    list_filter = ('created_at', 'updated_at', 'commentor', 'blog')
+    date_hierarchy = 'created_at'

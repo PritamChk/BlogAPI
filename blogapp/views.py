@@ -14,8 +14,8 @@ class BloggerViewSet(ModelViewSet, FilterView):
         "delete", "head", "option"]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filter_class = BloggerSearchFilter
-    search_fields = ["first_name"]
-    ordering_fields = ["first_name", "last_name"]
+    search_fields = ["first_name", "last_name", "username", "email"]
+    ordering_fields = ["first_name", "last_name", "email"]
     queryset = Blogger.objects.all()
 
     def get_serializer_class(self):
@@ -29,5 +29,5 @@ class BloggerViewSet(ModelViewSet, FilterView):
     def get_serializer_context(self):
         return {"request": self.request}
 
-#TODO : Implement BlogViewSet 
-#TODO : Implement CommentViewSet
+# TODO : Implement BlogViewSet
+# TODO : Implement CommentViewSet

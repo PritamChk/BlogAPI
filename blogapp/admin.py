@@ -8,10 +8,10 @@ class BloggerAdmin(UserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('username', 'password1', 'password2','first_name','last_name',"email"),
+            'fields': ('username', 'password1', 'password2', 'first_name', 'last_name', "email"),
         }),
     )
-    
+
     list_filter = (
         'last_login',
         'is_superuser',
@@ -20,6 +20,6 @@ class BloggerAdmin(UserAdmin):
         'date_joined',
         "last_login",
     )
-    
-    prepopulated_fields  = {"username":("last_name","first_name")}
+
+    prepopulated_fields = {"username": ("last_name", "first_name")}
     raw_id_fields = ('groups', 'user_permissions')

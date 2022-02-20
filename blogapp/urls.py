@@ -9,7 +9,7 @@ router = DefaultRouter()
 router.register('blogger', BloggerViewSet, basename='blogger')
 
 for ptrn in router.urls:
-    print(colored(ptrn, "yellow"))
+    print(colored(ptrn, "blue"))
     print()
-    
+
 urlpatterns = router.urls

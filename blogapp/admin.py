@@ -1,12 +1,19 @@
 from django.contrib import admin
+from django.utils.translation import gettext, gettext_lazy as _
 from django.contrib.auth.admin import UserAdmin
-from django_filters.rest_framework import DjangoFilterBackend
 from .models import *
-from .filters import BloggerFilter
 
 
 @admin.register(Blogger)
 class BloggerAdmin(UserAdmin):
+    # fieldsets = UserAdmin.fieldsets + (
+    #     (_('FOLLOWER-FOLLOWING'), 
+    #     {
+    #          'fields': ('follows', 'followed_by')
+    #     }
+    #     ),
+    # )
+    
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
@@ -16,7 +23,9 @@ class BloggerAdmin(UserAdmin):
                 'password2', 
                 'first_name', 
                 'last_name', 
-                "email"
+                "email",
+                # "follows",
+                # "followed_by"
             ),
         }),
     )
@@ -32,6 +41,7 @@ class BloggerAdmin(UserAdmin):
         'is_active',
         'date_joined',
         "last_login",
+        # "followed_by",
     )
 
     prepopulated_fields = {"username": ("last_name", "first_name")}

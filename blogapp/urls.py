@@ -5,6 +5,7 @@ from rest_framework_nested.routers import DefaultRouter
 from termcolor import colored
 
 router = DefaultRouter()
+# router.register('blogger',BloggerListVSet,'blogger')
 router.register('blogger', BloggerViewSet, basename='blogger')
 
 for ptrn in router.urls:

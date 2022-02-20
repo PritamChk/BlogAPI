@@ -7,28 +7,25 @@ from .models import Blogger, Blog, Comment
 from .serializer import *
 
 
+    
+    
 class BloggerViewSet(ModelViewSet):
-    http_methods = ["get", "post", 
-                    # "patch", #FIXME : HERE 
-                    "delete", "head", "option"]
+    http_method_names = [
+        "get", "post", 
+        "patch",  
+        "delete", "head", "option"]
     queryset = Blogger.objects.all()
     
     def get_queryset(self):
-        # FIXME : PATCH
-        # if self.request.method == "PATCH":
-        #     return Blogger.objects.filter(self.kwargs['pk']).first()
+        if self.request.method == "PATCH":
+            return Blogger.objects.all()
         return Blogger.objects.all()
 
     def get_serializer_class(self):
         method = self.request.method
         if method == "POST":
             return BloggerCreateSerializer
-        #FIXME : PATCH
-        # elif method == "PATCH":
-        #     return BloggerPatchSerializer
+        elif method == "PATCH":
+            return BloggerPatchSerializer
         return SimpleBloggerSerializer
 
-    #FIXME : Patch no working Properly
-    # @action(methods=["patch"],detail=False,url_name='blogger update')
-    # def patch(self,request,*args,**kwargs):
-    #     pass

@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from django_filters.rest_framework import DjangoFilterBackend
 from .models import *
+from .filters import BloggerFilter
 
 
 @admin.register(Blogger)
@@ -19,6 +21,10 @@ class BloggerAdmin(UserAdmin):
         }),
     )
 
+    search_fields = [
+        "first_name__icontains",    
+        "first_name__istartswith",    
+    ]    
     list_filter = (
         'last_login',
         'is_superuser',

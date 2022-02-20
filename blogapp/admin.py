@@ -7,22 +7,22 @@ from .models import *
 @admin.register(Blogger)
 class BloggerAdmin(UserAdmin):
     # fieldsets = UserAdmin.fieldsets + (
-    #     (_('FOLLOWER-FOLLOWING'), 
+    #     (_('FOLLOWER-FOLLOWING'),
     #     {
     #          'fields': ('follows', 'followed_by')
     #     }
     #     ),
     # )
-    
+
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
             'fields': (
-                'username', 
-                'password1', 
-                'password2', 
-                'first_name', 
-                'last_name', 
+                'username',
+                'password1',
+                'password2',
+                'first_name',
+                'last_name',
                 "email",
                 # "follows",
                 # "followed_by"
@@ -31,9 +31,9 @@ class BloggerAdmin(UserAdmin):
     )
 
     search_fields = [
-        "first_name__icontains",    
-        "first_name__istartswith",    
-    ]    
+        "first_name__icontains",
+        "first_name__istartswith",
+    ]
     list_filter = (
         'last_login',
         'is_superuser',
@@ -47,16 +47,23 @@ class BloggerAdmin(UserAdmin):
     prepopulated_fields = {"username": ("last_name", "first_name")}
     raw_id_fields = ('groups', 'user_permissions')
 
+
 @admin.register(Blog)
 class BlogAdmin(admin.ModelAdmin):
     list_display = (
         'id',
-        'title',
-        'description',
+        'get_short_title',
+        'get_short_description',
         'created_at',
         'updated_at',
         'creator',
     )
+    search_fields = [
+        "title__icontains",
+        "title__istartswith",
+        "description__icontains"
+    ]
+    autocomplete_fields = ["creator"]
     list_filter = ('created_at', 'updated_at', 'creator')
     date_hierarchy = 'created_at'
 
@@ -65,11 +72,12 @@ class BlogAdmin(admin.ModelAdmin):
 class CommentAdmin(admin.ModelAdmin):
     list_display = (
         'id',
-        'boktobyo',
+        'get_short_boktobyo',
         'created_at',
         'updated_at',
         'commentor',
         'blog',
     )
+    autocomplete_fields = ["blog", "commentor"]
     list_filter = ('created_at', 'updated_at', 'commentor', 'blog')
     date_hierarchy = 'created_at'

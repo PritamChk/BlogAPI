@@ -35,6 +35,9 @@ class Blog(models.Model):
     def get_short_description(self) -> str:
         return self.description[:30]+"..."
 
+    def get_short_title(self) -> str:
+        return self.title[:10]+"..."
+
 
 class Comment(models.Model):
     boktobyo = models.TextField()

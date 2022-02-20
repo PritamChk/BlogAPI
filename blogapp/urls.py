@@ -1,5 +1,4 @@
 # from django.urls import path, include
-from os import sep
 from .views import *
 from rest_framework_nested.routers import DefaultRouter
 from termcolor import colored

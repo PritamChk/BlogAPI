@@ -8,7 +8,14 @@ class BloggerAdmin(UserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('username', 'password1', 'password2', 'first_name', 'last_name', "email"),
+            'fields': (
+                'username', 
+                'password1', 
+                'password2', 
+                'first_name', 
+                'last_name', 
+                "email"
+            ),
         }),
     )
 

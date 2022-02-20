@@ -8,6 +8,7 @@ class Blogger(AbstractUser):
     first_name = models.CharField(_('first name'), max_length=150)
     last_name = models.CharField(_('last name'), max_length=150)
     email = models.EmailField(_('email address'), unique=True, db_index=True)
+    # TODO : Implement Follower Following System 
     # follows = models.ManyToManyField('self',blank=True,symmetrical=False)
     # followed_by = models.ForeignKey('self',on_delete=models.CASCADE,null=True,blank=True,related_name='followers')
 

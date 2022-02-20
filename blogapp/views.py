@@ -7,15 +7,13 @@ from .models import Blogger, Blog, Comment
 from .serializer import *
 
 
-    
-    
 class BloggerViewSet(ModelViewSet):
     http_method_names = [
-        "get", "post", 
-        "patch",  
+        "get", "post",
+        "patch",
         "delete", "head", "option"]
     queryset = Blogger.objects.all()
-    
+
     def get_queryset(self):
         if self.request.method == "PATCH":
             return Blogger.objects.all()
@@ -28,4 +26,3 @@ class BloggerViewSet(ModelViewSet):
         elif method == "PATCH":
             return BloggerPatchSerializer
         return SimpleBloggerSerializer
-

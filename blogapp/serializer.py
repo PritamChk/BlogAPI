@@ -14,6 +14,8 @@ class SimpleBloggerSerializer(ms):
         fields = (
             "id",
             "username",
+            "first_name",
+            "last_name",
             "get_full_name",
         )
 

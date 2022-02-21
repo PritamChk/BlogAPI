@@ -156,5 +156,6 @@ DJOSER = {
     'SERIALIZERS': {
         # 'user_create':'blogapp.serializers.BloggerSignUpSerializer' #REVISIT NOT REQUEIRED
         'user_create': 'blogapp.serializers.BloggerCreateSerializer',
+        'current_user':"blogapp.serializers.SimpleBloggerSerializer"
     }
 }

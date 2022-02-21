@@ -1,26 +1,37 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.filters import SearchFilter, OrderingFilter
-from rest_framework.viewsets import ModelViewSet, GenericViewSet
-from rest_framework.mixins import ListModelMixin
-from .models import Blogger, Blog, Comment
-from .serializers import *
+from rest_framework.decorators import action
+from rest_framework.filters import OrderingFilter, SearchFilter
+from rest_framework.mixins import (CreateModelMixin, DestroyModelMixin,
+                                   ListModelMixin, RetrieveModelMixin,
+                                   UpdateModelMixin)
+from rest_framework.permissions import AllowAny, IsAuthenticated,IsAuthenticatedOrReadOnly
+from rest_framework.response import Response
+from rest_framework.viewsets import GenericViewSet, ModelViewSet
+from termcolor import colored
+
 from .filters import BloggerFilter
+from .models import Blog, Blogger, Comment
+from .serializers import *
 
 
 class BloggerViewSet(ModelViewSet):
-    http_method_names = [
-        # "get", #FIXME : NEED TO BE REMOVED
-        "post",
-        "patch",
-        "delete",
-        "head",
-        "option"
-    ]
+    # http_method_names = [
+    #     "get", #FIXME : NEED TO BE REMOVED
+    #     "head",
+    #     "option"
+    # ]
+    # serializer_class = SimpleBloggerSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filter_class = BloggerFilter
     search_fields = ["first_name", "last_name", "username", "email"]
     ordering_fields = ["first_name", "last_name", "email"]
+    # permission_classes = [IsAuthenticated]
     queryset = Blogger.objects.all()
+
+    def get_permissions(self): #FIXME : NOT WORKING LIKE MOSH : lec : 11
+        if self.request.method == "GET":
+            return [AllowAny()]
+        return [IsAuthenticated()]
 
     def get_serializer_class(self):
         method = self.request.method
@@ -29,6 +40,19 @@ class BloggerViewSet(ModelViewSet):
         elif method == "PATCH":
             return BloggerPatchSerializer
         return SimpleBloggerSerializer  # FIXME : NEED TO BE REMOVED
+
+    @action(detail=False, methods=["GET", "PUT"])  # FIXME
+    def me(self, request):
+        blogger, created = Blogger.objects.get_or_create(
+            id=self.request.user.id)
+        if request.method == "GET":
+            serializer = SimpleBloggerSerializer(blogger)
+            return Response(serializer.data)
+        elif request.method == "PUT":
+            serializer = BloggerPatchSerializer(blogger,data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data)
 
 
 class BlogVSet(ModelViewSet):

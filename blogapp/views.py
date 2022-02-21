@@ -4,7 +4,7 @@ from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.mixins import ListModelMixin
 from .models import Blogger, Blog, Comment
 from .serializer import *
-from .filters import BloggerSearchFilter, BlogFilter
+from .filters import BloggerFilter
 
 
 class BloggerViewSet(ModelViewSet):
@@ -13,7 +13,7 @@ class BloggerViewSet(ModelViewSet):
         "patch",
         "delete", "head", "option"]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filter_class = BloggerSearchFilter
+    filter_class = BloggerFilter
     search_fields = ["first_name", "last_name", "username", "email"]
     ordering_fields = ["first_name", "last_name", "email"]
     queryset = Blogger.objects.all()
@@ -32,7 +32,9 @@ class BloggerViewSet(ModelViewSet):
 
 class BlogVSet(ModelViewSet):
     http_method_names = ["get", "post", "patch", "delete", "option", "head"]
-    # queryset = Blog.objects.select_related('creator').all()
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ["title", "description"]
+    ordering_fields = ["title", "created_at"]
 
     def get_queryset(self):
         return Blog.objects.select_related('creator').filter(creator__id=self.kwargs.get('blogger_pk'))
@@ -50,6 +52,9 @@ class BlogVSet(ModelViewSet):
 
 
 class AllBlogVSet(ListModelMixin, GenericViewSet):
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ["title", "description"]
+    ordering_fields = ["title", "created_at"]
     queryset = Blog.objects.select_related('creator').all()
     serializer_class = BlogReadSerializer
 

@@ -2,7 +2,7 @@
 from rest_framework.serializers import ModelSerializer as ms
 
 from .models import (
-    Blog,  # TODO - YET TO SERIALIZE
+    Blog,  
     Blogger,
     Comment,  # TODO - YET TO DO SERIALIZE
 )
@@ -14,8 +14,6 @@ class SimpleBloggerSerializer(ms):
         fields = (
             "id",
             "username",
-            # "first_name",
-            # "last_name",
             "get_full_name",
         )
 

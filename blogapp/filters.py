@@ -6,7 +6,7 @@ from .models import(
 )
 
 
-class BloggerSearchFilter(FilterSet):
+class BloggerFilter(FilterSet):
     class Meta:
         model = Blogger
         fields = {
@@ -15,15 +15,6 @@ class BloggerSearchFilter(FilterSet):
             'email': ['icontains'],
             "username": ["startswith", "exact"],
             'last_login': ['year__gt', 'year__lt', "month__gt", "month__lt"],
-        }
-
-
-class BlogFilter(FilterSet):
-    class Meta:
-        model = Blog
-        fields = {
-            "title": ["icontains"],
-            "description": ['icontains']
         }
 
 

@@ -23,7 +23,6 @@ class BloggerCreateSerializer(ms):
     class Meta:
         model = Blogger
         fields = (
-            "id",
             "username",
             "first_name",
             "last_name",

@@ -9,9 +9,13 @@ from .filters import BloggerFilter
 
 class BloggerViewSet(ModelViewSet):
     http_method_names = [
-        "get", "post",
+        "get",
+        "post",
         "patch",
-        "delete", "head", "option"]
+        "delete",
+        "head",
+        "option"
+    ]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filter_class = BloggerFilter
     search_fields = ["first_name", "last_name", "username", "email"]
@@ -26,9 +30,7 @@ class BloggerViewSet(ModelViewSet):
             return BloggerPatchSerializer
         return SimpleBloggerSerializer
 
-    def get_serializer_context(self):
-        return {"request": self.request}
-
+    
 
 class BlogVSet(ModelViewSet):
     http_method_names = ["get", "post", "patch", "delete", "option", "head"]

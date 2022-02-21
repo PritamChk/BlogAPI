@@ -6,14 +6,6 @@ from .models import *
 
 @admin.register(Blogger)
 class BloggerAdmin(UserAdmin):
-    # fieldsets = UserAdmin.fieldsets + (
-    #     (_('FOLLOWER-FOLLOWING'),
-    #     {
-    #          'fields': ('follows', 'followed_by')
-    #     }
-    #     ),
-    # )
-
     add_fieldsets = (
         (None, {
             'classes': ('wide',),

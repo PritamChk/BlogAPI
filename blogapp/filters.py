@@ -21,5 +21,4 @@ class BloggerFilter(FilterSet):
 # class CommentFilter(FilterSet):
 #     class Meta:
 #         model = Comment
-#         # TODO : filter fields to be added
-#         # fields
+#         fields                          # TODO : filter fields to be added

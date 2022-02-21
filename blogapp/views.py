@@ -37,7 +37,7 @@ class BlogVSet(ModelViewSet):
     ordering_fields = ["title", "created_at"]
 
     def get_queryset(self):
-        return Blog.objects.select_related('creator').filter(creator__id=self.kwargs.get('blogger_pk'))
+        return Blog.objects.select_related('creator').prefetch_related('comments').filter(creator__id=self.kwargs.get('blogger_pk'))
 
     def get_serializer_class(self):
         method = self.request.method
@@ -55,7 +55,34 @@ class AllBlogVSet(ListModelMixin, GenericViewSet):
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ["title", "description"]
     ordering_fields = ["title", "created_at"]
-    queryset = Blog.objects.select_related('creator').all()
+    queryset = Blog.objects.select_related(
+        'creator').prefetch_related('comments').all()
     serializer_class = BlogReadSerializer
 
 # TODO : Implement CommentViewSet
+
+
+class CommentVSet(ModelViewSet):
+    http_method_names = ["get", "post", "patch", "delete", "option", "head"]
+
+    def get_queryset(self):
+        return Comment.objects.select_related('blog')\
+            .select_related('commentor')\
+            .filter(
+                commentor__id=self.kwargs.get('blogger_pk'),
+                blog__id=self.kwargs.get('blogs_pk')
+        )
+
+    def get_serializer_context(self):
+        return {
+            'blogger_pk': self.kwargs['blogger_pk'],
+            'blog_pk': self.kwargs['blogs_pk']
+        }
+
+    def get_serializer_class(self):
+        method = self.request.method
+        if method == "POST":
+            return CommentsPostSerializer
+        elif method == "PATCH":
+            return CommentsPatchSerializer
+        return CommentsGetSerializer

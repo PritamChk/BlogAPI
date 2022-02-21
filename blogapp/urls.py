@@ -6,13 +6,18 @@ from termcolor import colored
 router = DefaultRouter()
 # router.register('blogger',BloggerListVSet,'blogger')
 router.register('blogger', BloggerViewSet, basename='blogger')
-router.register('all-blog', AllBlogVSet, basename='all-blog')  
+router.register('all-blog', AllBlogVSet, basename='all-blog')
 
-blogger_router = NestedDefaultRouter(router, 'blogger', lookup='blogger')
-blogger_router.register('blogs', BlogVSet, basename='blogger-blogs')
+blog_router = NestedDefaultRouter(
+    router, 'blogger', lookup='blogger')  # parent
+blog_router.register('blogs', BlogVSet, basename='blogs')  # child
+
+comment_router = NestedDefaultRouter(blog_router, 'blogs', lookup='blogs')
+comment_router.register('comments', CommentVSet, basename='comments')
 
 urlpatterns = router.urls \
-    + blogger_router.urls
+    + blog_router.urls \
+    + comment_router.urls
 
 for ptrn in urlpatterns:
     print(colored(ptrn, "blue"))

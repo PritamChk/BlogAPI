@@ -3,13 +3,13 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.mixins import ListModelMixin
 from .models import Blogger, Blog, Comment
-from .serializer import *
+from .serializers import *
 from .filters import BloggerFilter
 
 
 class BloggerViewSet(ModelViewSet):
     http_method_names = [
-        "get",
+        # "get", #FIXME : NEED TO BE REMOVED
         "post",
         "patch",
         "delete",
@@ -28,9 +28,8 @@ class BloggerViewSet(ModelViewSet):
             return BloggerCreateSerializer
         elif method == "PATCH":
             return BloggerPatchSerializer
-        return SimpleBloggerSerializer
+        return SimpleBloggerSerializer  # FIXME : NEED TO BE REMOVED
 
-    
 
 class BlogVSet(ModelViewSet):
     http_method_names = ["get", "post", "patch", "delete", "option", "head"]
@@ -39,7 +38,9 @@ class BlogVSet(ModelViewSet):
     ordering_fields = ["title", "created_at"]
 
     def get_queryset(self):
-        return Blog.objects.select_related('creator').prefetch_related('comments').filter(creator__id=self.kwargs.get('blogger_pk'))
+        return Blog.objects.select_related('creator')\
+            .prefetch_related('comments')\
+            .filter(creator__id=self.kwargs.get('blogger_pk'))
 
     def get_serializer_class(self):
         method = self.request.method
@@ -60,8 +61,6 @@ class AllBlogVSet(ListModelMixin, GenericViewSet):
     queryset = Blog.objects.select_related(
         'creator').prefetch_related('comments').all()
     serializer_class = BlogReadSerializer
-
-# TODO : Implement CommentViewSet
 
 
 class CommentVSet(ModelViewSet):

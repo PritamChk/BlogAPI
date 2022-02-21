@@ -44,7 +44,7 @@ class Blog(models.Model):
 
 
 class Comment(models.Model):
-    boktobyo = models.TextField()
+    comment_body = models.TextField()
     created_at = models.DateTimeField(
         _("Creation Date & Time"), auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(
@@ -60,5 +60,5 @@ class Comment(models.Model):
     def __str__(self) -> str:
         return f"ID: {self.id}"
 
-    def get_short_boktobyo(self) -> str:
-        return f"{self.boktobyo[:15]}..."
+    def get_short_comment_body(self) -> str:
+        return f"{self.comment_body[:15]}..."

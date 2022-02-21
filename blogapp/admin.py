@@ -72,7 +72,7 @@ class BlogAdmin(admin.ModelAdmin):
 class CommentAdmin(admin.ModelAdmin):
     list_display = (
         'id',
-        'get_short_boktobyo',
+        'get_short_comment_body',
         'created_at',
         'updated_at',
         'commentor',

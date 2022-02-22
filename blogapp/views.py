@@ -4,7 +4,7 @@ from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.mixins import (CreateModelMixin, DestroyModelMixin,
                                    ListModelMixin, RetrieveModelMixin,
                                    UpdateModelMixin)
-from rest_framework.permissions import AllowAny, IsAuthenticated,IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, DjangoModelPermissions, AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from termcolor import colored
@@ -12,36 +12,36 @@ from termcolor import colored
 from .filters import BloggerFilter
 from .models import Blog, Blogger, Comment
 from .serializers import *
+from .permissions import *
 
 
-class BloggerViewSet(ModelViewSet):
-    # http_method_names = [
-    #     "get", #FIXME : NEED TO BE REMOVED
-    #     "head",
-    #     "option"
-    # ]
-    # serializer_class = SimpleBloggerSerializer
+class BloggerViewSet(
+    ListModelMixin,
+    RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, GenericViewSet
+):
+
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filter_class = BloggerFilter
     search_fields = ["first_name", "last_name", "username", "email"]
     ordering_fields = ["first_name", "last_name", "email"]
-    # permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticatedOrReadOnly,BloggerEditPermission]
     queryset = Blogger.objects.all()
 
-    def get_permissions(self): #FIXME : NOT WORKING LIKE MOSH : lec : 11
+    def get_permissions(self):  # FIXME : NOT WORKING LIKE MOSH : lec : 11
         if self.request.method == "GET":
             return [AllowAny()]
-        return [IsAuthenticated()]
+        return [BloggerEditPermission()]
 
     def get_serializer_class(self):
         method = self.request.method
-        if method == "POST":
+        if method == "PUT":
             return BloggerCreateSerializer
         elif method == "PATCH":
             return BloggerPatchSerializer
         return SimpleBloggerSerializer  # FIXME : NEED TO BE REMOVED
 
-    @action(detail=False, methods=["GET", "PUT"])  # FIXME
+    # FIXME
+    @action(detail=False, methods=["GET", "PATCH"])
     def me(self, request):
         blogger, created = Blogger.objects.get_or_create(
             id=self.request.user.id)
@@ -49,17 +49,41 @@ class BloggerViewSet(ModelViewSet):
             serializer = SimpleBloggerSerializer(blogger)
             return Response(serializer.data)
         elif request.method == "PUT":
-            serializer = BloggerPatchSerializer(blogger,data=request.data)
+            serializer = BloggerPatchSerializer(blogger, data=request.data)
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data)
 
 
-class BlogVSet(ModelViewSet):
-    http_method_names = ["get", "post", "patch", "delete", "option", "head"]
+class OwnerBlogListVSet(ListModelMixin, GenericViewSet):
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ["title", "description"]
     ordering_fields = ["title", "created_at"]
+    serializer_class = BlogReadSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Blog.objects.prefetch_related('comments')\
+            .select_related('creator').filter(creator__id=self.kwargs['blogger_pk']).all()
+
+
+class OwnerBlogCRUDSet(
+    CreateModelMixin,
+    RetrieveModelMixin,
+    UpdateModelMixin,
+    DestroyModelMixin,
+    GenericViewSet
+):
+    http_method_names = ["get", "put","patch" ,"post","delete","option", "head"]
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ["title", "description"]
+    ordering_fields = ["title", "created_at"]
+    permission_classes = [IsAuthenticatedOrReadOnly, BlogEditPermission]
+
+    # def get_permissions(self):
+    #     if self.request.method == "GET":
+    #         return [AllowAny()]
+    #     return [BlogEditPermission(),DjangoModelPermissions()]
 
     def get_queryset(self):
         return Blog.objects.select_related('creator')\

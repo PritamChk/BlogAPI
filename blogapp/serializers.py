@@ -1,13 +1,9 @@
 
+from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework.serializers import ModelSerializer as ms
 from rest_framework.serializers import SerializerMethodField as smf
-from djoser.serializers import UserCreateSerializer
 
-from .models import (
-    Blog,
-    Blogger,
-    Comment,  
-)
+from .models import Blog, Blogger, Comment
 
 
 class SimpleBloggerSerializer(ms):
@@ -67,7 +63,7 @@ class BlogReadSerializer(ms):
 class BlogPostSerializer(ms):
     class Meta:
         model = Blog
-        fields = ('id','title', 'description')  # FIXME : id removed
+        fields = ('id', 'title', 'description')  # FIXME : id removed
 
     def create(self, validated_data):
         creator_id = self.context.get('creator_id')
@@ -119,13 +115,24 @@ class CommentsPatchSerializer(ms):
         )
 
 
-# class BloggerSignUpSerializer(UserCreateSerializer):
-#     class Meta(UserCreateSerializer.Meta):
-#         # model = Blogger
-#         fields = (
-#             "username",
-#             "first_name",
-#             "last_name",
-#             "email",
-#             "password",
-#         )
+class BloggerSignUpSerializer(UserCreateSerializer):
+    class Meta(UserCreateSerializer.Meta):
+        # model = Blogger
+        fields = (
+            "username",
+            "first_name",
+            "last_name",
+            "email",
+            "password",
+        )
+
+
+class CurrentBloggerSerializer(UserSerializer):
+    class Meta(UserSerializer.Meta):
+        fields = (
+            "id",
+            "username",
+            "first_name",
+            "last_name",
+            "email",
+        )

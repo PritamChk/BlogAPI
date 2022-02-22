@@ -9,9 +9,10 @@ router.register('all-blog', AllBlogVSet, basename='all-blog')
 
 blog_router = NestedDefaultRouter(
     router, 'blogger', lookup='blogger')  # parent
-blog_router.register('blogs', BlogVSet, basename='blogs')  # child
+blog_router.register('blog', OwnerBlogCRUDSet, basename='blog')  # child
+blog_router.register('blogs',OwnerBlogListVSet,'blogs')
 
-comment_router = NestedDefaultRouter(blog_router, 'blogs', lookup='blogs')
+comment_router = NestedDefaultRouter(blog_router, 'blog', lookup='blog')
 comment_router.register('comments', CommentVSet, basename='comments')
 
 urlpatterns = router.urls \

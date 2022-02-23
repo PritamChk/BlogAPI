@@ -1,9 +1,50 @@
 
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework.serializers import ModelSerializer as ms
-from rest_framework.serializers import SerializerMethodField as smf
+from rest_framework.serializers import SerializerMethodField as smf, StringRelatedField
 
 from .models import Blog, Blogger, Comment
+
+
+class BloggerAdminSerializer(ms):
+    class Meta:
+        model = Blogger
+        fields = '__all__'
+
+
+class BloggerShow(ms):
+    username = StringRelatedField(read_only=True)
+
+    class Meta:
+        model = Blogger
+        fields = [
+            "id",
+            "username",
+            "first_name",
+            "last_name",
+            "email",
+        ]
+
+
+class BloggerReadOnlySerializer(ms):
+    username = StringRelatedField(read_only=True)
+
+    class Meta:
+        model = Blogger
+        fields = [
+            "id",
+            "username",
+            "first_name",
+            "last_name",
+            "email",
+        ]
+        read_only_fields = [
+            "id",
+            "username",
+            "first_name",
+            "last_name",
+            "email",
+        ]
 
 
 class SimpleBloggerSerializer(ms):

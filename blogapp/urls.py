@@ -5,6 +5,7 @@ from termcolor import colored
 
 router = DefaultRouter()
 router.register('blogger', BloggerViewSet, basename='blogger')
+router.register('all-blogger', AllBloggerViewSet, basename='all_blogger')
 router.register('all-blog', AllBlogVSet, basename='all-blog')
 
 blog_router = NestedDefaultRouter(

@@ -24,3 +24,12 @@ class BlogPostPermission(BasePermission):
         if request.method in SAFE_METHODS:
             return True
         return obj.creator == request.user and request.user.id == view.kwargs['blogger_pk']
+
+
+class IsSelf(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return request.user == obj
+
+class NotSelf(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return request.user != obj

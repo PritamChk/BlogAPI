@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser, DjangoModel
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from termcolor import colored
-
+from drf_psq import PsqMixin, psq, Rule
 from .filters import BloggerFilter
 from .models import Blog, Blogger, Comment
 from .serializers import *
@@ -16,43 +16,46 @@ from .permissions import *
 
 
 class BloggerViewSet(
-    ListModelMixin,
-    RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, GenericViewSet
+    PsqMixin,
+    ModelViewSet
 ):
 
-    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filter_backends = [
+        DjangoFilterBackend,
+        SearchFilter,
+        OrderingFilter
+    ]
     filter_class = BloggerFilter
-    search_fields = ["first_name", "last_name", "username", "email"]
-    ordering_fields = ["first_name", "last_name", "email"]
-    # permission_classes = [IsAuthenticatedOrReadOnly,BloggerEditPermission]
+    search_fields = [
+        "first_name",
+        "last_name",
+        "username",
+        "email"]
+    ordering_fields = [
+        "first_name",
+        "last_name",
+        "email"
+    ]
+    permission_classes = [IsAdminUser]
     queryset = Blogger.objects.all()
+    serializer_class = BloggerAdminSerializer
+    psq_rules = {
 
-    def get_permissions(self):  # FIXME : NOT WORKING LIKE MOSH : lec : 11
-        if self.request.method == "GET":
-            return [AllowAny()]
-        return [BloggerEditPermission()]
+        ("retrieve", 'partial_update', "update", 'destroy'): [
+            Rule([IsAdminUser], BloggerAdminSerializer),
+            Rule([IsAuthenticated & IsSelf], BloggerShow),
+        ],
+        "list": [
+            Rule([IsAdminUser], BloggerAdminSerializer),
+        ],
 
-    def get_serializer_class(self):
-        method = self.request.method
-        if method == "PUT":
-            return BloggerCreateSerializer
-        elif method == "PATCH":
-            return BloggerPatchSerializer
-        return SimpleBloggerSerializer  # FIXME : NEED TO BE REMOVED
+    }
 
-    # FIXME
-    @action(detail=False, methods=["GET", "PATCH"])
-    def me(self, request):
-        blogger, created = Blogger.objects.get_or_create(
-            id=self.request.user.id)
-        if request.method == "GET":
-            serializer = SimpleBloggerSerializer(blogger)
-            return Response(serializer.data)
-        elif request.method == "PUT":
-            serializer = BloggerPatchSerializer(blogger, data=request.data)
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
-            return Response(serializer.data)
+
+class AllBloggerViewSet(PsqMixin, ListModelMixin, RetrieveModelMixin, GenericViewSet):
+    queryset = Blogger.objects.all()
+    serializer_class = BloggerShow
+    permission_classes = [IsAuthenticated]
 
 
 class OwnerBlogListVSet(ListModelMixin, GenericViewSet):
@@ -74,7 +77,8 @@ class OwnerBlogCRUDSet(
     DestroyModelMixin,
     GenericViewSet
 ):
-    http_method_names = ["get", "put","patch" ,"post","delete","option", "head"]
+    http_method_names = ["get", "put", "patch",
+                         "post", "delete", "option", "head"]
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ["title", "description"]
     ordering_fields = ["title", "created_at"]
@@ -135,3 +139,30 @@ class CommentVSet(ModelViewSet):
         elif method == "PATCH":
             return CommentsPatchSerializer
         return CommentsGetSerializer
+
+    # def get_permissions(self):  # FIXME : NOT WORKING LIKE MOSH : lec : 11
+    #     if self.request.method == "GET":
+    #         return [AllowAny()]
+    #     return [BloggerEditPermission()]
+
+    # def get_serializer_class(self):
+    #     method = self.request.method
+    #     if method == "PUT":
+    #         return BloggerCreateSerializer
+    #     elif method == "PATCH":
+    #         return BloggerPatchSerializer
+    #     return SimpleBloggerSerializer  # FIXME : NEED TO BE REMOVED
+
+    # FIXME
+    # @action(detail=False, methods=["GET", "PATCH"])
+    # def me(self, request):
+    #     blogger, created = Blogger.objects.get_or_create(
+    #         id=self.request.user.id)
+    #     if request.method == "GET":
+    #         serializer = SimpleBloggerSerializer(blogger)
+    #         return Response(serializer.data)
+    #     elif request.method == "PUT":
+    #         serializer = BloggerPatchSerializer(blogger, data=request.data)
+    #         serializer.is_valid(raise_exception=True)
+    #         serializer.save()
+    #         return Response(serializer.data)

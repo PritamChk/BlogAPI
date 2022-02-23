@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "debug_toolbar",
     'django_extensions',
     'django_filters',
+    'drf_psq',
     # own apps
     "blogapp",
 ]

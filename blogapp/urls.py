@@ -14,12 +14,12 @@ all_blogger_blogs.register('blog', OwnBlogViewSet, basename='blog')  # child
 
 
 
-# comment_router = NestedDefaultRouter(owner_blog_router, 'blog', lookup='blog')
-# comment_router.register('comments', CommentVSet, basename='comments')
+comment_router = NestedDefaultRouter(all_blogger_blogs, 'blog', lookup='blog')
+comment_router.register('comments', CommentVSet, basename='comments')
 
 urlpatterns = router.urls \
-    + all_blogger_blogs.urls 
-    # + comment_router.urls
+    + all_blogger_blogs.urls \
+    + comment_router.urls
 
 for ptrn in urlpatterns:
     print(colored(ptrn, "blue"))

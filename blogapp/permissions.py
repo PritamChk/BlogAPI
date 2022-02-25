@@ -49,6 +49,7 @@ class BlogPermission(BasePermission):
 
 
 class IsBlogOwner(BasePermission):
+    message = "You are not the owner of this Blog"
     def has_permission(self, request, view):
         if request.method in SAFE_METHODS:
             return True
@@ -56,3 +57,8 @@ class IsBlogOwner(BasePermission):
 
     def has_object_permission(self, request, view, obj):
         return obj.creator == request.user
+
+class IsOwnerOfComment(BasePermission):
+    message = "You are not the owner of this comment"
+    def has_object_permission(self, request, view, obj):
+        return bool(obj.commentor==request.user)

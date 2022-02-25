@@ -117,17 +117,22 @@ class BlogPatchSerializer(ms):
 
 # ----------------COMMENT SERIALIZERS ---------------------------------------
 
+class CommentBloggerSerializer(ms):
+    class Meta:
+        model = Blogger
+        fields = ["first_name", "last_name","username"]
 
-class CommentsGetSerializer(ms):
+class CommentGetSerializer(ms):
+    commentor = CommentBloggerSerializer(read_only = True)
     class Meta:
         model = Comment
         fields = (
             "id",
+            "commentor",
             'comment_body',
             'created_at',
             'updated_at',
         )
-
 
 class CommentsPostSerializer(ms):
     class Meta:

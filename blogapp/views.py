@@ -49,7 +49,7 @@ class BloggerViewSet(ModelViewSet):
             return [IsAuthenticated()]
         elif method in ["PATCH", "DELETE"]:
             # return [IsAuthenticated(), IsSelf()] #FIXME : Admin should not patch
-            return [ AND(IsAuthenticated(), IsSelf())]
+            return [AND(IsAuthenticated(), IsSelf())]
         return [IsAdminUser()]
 
     def get_serializer_class(self):
@@ -92,36 +92,52 @@ class OwnBlogViewSet(ModelViewSet):
     def get_serializer_context(self):
         return {"creator_id": self.request.user.id}
 
+
 class AllBlogVSet(ListModelMixin, GenericViewSet):
-    filter_backends=[SearchFilter, OrderingFilter]
-    search_fields=["title", "description"]
-    ordering_fields=["title", "created_at"]
-    queryset=Blog.objects.select_related(
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ["title", "description"]
+    ordering_fields = ["title", "created_at"]
+    queryset = Blog.objects.select_related(
         'creator').prefetch_related('comments').all()
-    serializer_class=BlogReadSerializer
+    serializer_class = BlogReadSerializer
 
 
 class CommentVSet(ModelViewSet):
-    http_method_names=["get", "post", "patch", "delete", "option", "head"]
+    http_method_names = ["get", "post", "patch", "delete", "option", "head"]
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [OR(IsAdminUser(), IsAuthenticated())]
+        elif self.request.method in ["PATCH", "POST","DELETE"]:
+            return [AND(IsAuthenticated(), IsOwnerOfComment())]
+        return [
+            OR(
+                IsAdminUser(),
+                AND(
+                    IsAuthenticated(),
+                    IsOwnerOfComment()
+                )
+            )
+        ]
 
     def get_queryset(self):
         return Comment.objects.select_related('blog')\
             .select_related('commentor')\
             .filter(
-                commentor__id=self.kwargs.get('blogger_pk'),
-                blog__id=self.kwargs.get('blogs_pk')
+                # commentor__id=self.kwargs.get('blogger_pk'),
+                blog__id=self.kwargs.get('blog_pk')
         )
 
     def get_serializer_context(self):
         return {
-            'blogger_pk': self.kwargs['blogger_pk'],
-            'blog_pk': self.kwargs['blogs_pk']
+            'blogger_pk': self.request.user.id,
+            'blog_pk': self.kwargs['blog_pk']
         }
 
     def get_serializer_class(self):
-        method=self.request.method
+        method = self.request.method
         if method == "POST":
             return CommentsPostSerializer
         elif method == "PATCH":
             return CommentsPatchSerializer
-        return CommentsGetSerializer
+        return CommentGetSerializer

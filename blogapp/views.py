@@ -108,7 +108,7 @@ class CommentVSet(ModelViewSet):
     def get_permissions(self):
         if self.request.method == 'GET':
             return [OR(IsAdminUser(), IsAuthenticated())]
-        elif self.request.method in ["PATCH", "POST","DELETE"]:
+        elif self.request.method in ["PATCH", "POST", "DELETE"]:
             return [AND(IsAuthenticated(), IsOwnerOfComment())]
         return [
             OR(

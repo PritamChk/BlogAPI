@@ -3,11 +3,13 @@ from .models import Blogger, Blog
 
 
 class BloggerEditPermission(BasePermission):
+    def has_permission(self, request, view):
+        return request.user
 
     def has_object_permission(self, request, view, obj: Blogger):
         if request.method in SAFE_METHODS:
             return False
-        return obj == request.user and request.user.is_authenticated
+        return obj == request.user
 
 
 class BlogEditPermission(BasePermission):
@@ -27,9 +29,30 @@ class BlogPostPermission(BasePermission):
 
 
 class IsSelf(BasePermission):
+    # def has_permission(self, request, view):
+    #     if request.method in SAFE_METHODS:
+    #         return True
+    #     return True
+
     def has_object_permission(self, request, view, obj):
         return request.user == obj
+
 
 class NotSelf(BasePermission):
     def has_object_permission(self, request, view, obj):
         return request.user != obj
+
+
+class BlogPermission(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return obj in request.user.blogs
+
+
+class IsBlogOwner(BasePermission):
+    def has_permission(self, request, view):
+        if request.method in SAFE_METHODS:
+            return True
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+        return obj.creator == request.user

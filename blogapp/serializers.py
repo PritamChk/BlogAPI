@@ -13,8 +13,6 @@ class BloggerAdminSerializer(ms):
 
 
 class BloggerShow(ms):
-    username = StringRelatedField(read_only=True)
-
     class Meta:
         model = Blogger
         fields = [
@@ -24,6 +22,7 @@ class BloggerShow(ms):
             "last_name",
             "email",
         ]
+        read_only_fields = ['id',"username"]
 
 
 class BloggerReadOnlySerializer(ms):

@@ -37,7 +37,7 @@ class BloggerAdmin(UserAdmin):
     )
 
     prepopulated_fields = {"username": ("last_name", "first_name")}
-    raw_id_fields = ('groups', 'user_permissions')
+    # raw_id_fields = ('groups', 'user_permissions')
 
 
 @admin.register(Blog)

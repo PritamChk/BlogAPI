@@ -1,6 +1,6 @@
 
 from django_filters.rest_framework import DjangoFilterBackend
-from drf_psq import PsqMixin, Rule, psq
+# from drf_psq import PsqMixin, Rule, psq
 from rest_framework.decorators import action, permission_classes
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.mixins import (CreateModelMixin, DestroyModelMixin,

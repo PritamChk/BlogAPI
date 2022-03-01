@@ -17,6 +17,7 @@ drf-psq = "*"
 autopep8 = "*"
 django-debug-toolbar = "*"
 termcolor = "*"
+pytest = "*"
 
 [requires]
 python_version = "3.10"

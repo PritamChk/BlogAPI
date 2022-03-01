@@ -19,6 +19,7 @@ termcolor = "*"
 pytest = "*"
 pytest-django = "*"
 pytest-watch = "*"
+locust = "*"
 
 [requires]
 python_version = "3.10"

@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     # 3rd party apps
     'rest_framework',
     'djoser',
-    "debug_toolbar",
+    # "debug_toolbar",
     'django_extensions',
     'django_filters',
     # 'drf_psq', # uninstalled
@@ -49,9 +49,9 @@ INSTALLED_APPS = [
     "blogapp",
 ]
 
-INTERNAL_IPS = [
-    "127.0.0.1",
-]
+# INTERNAL_IPS = [
+#     "127.0.0.1",
+# ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -62,7 +62,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # 3rd party middleware
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
+    # "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = 'core.urls'

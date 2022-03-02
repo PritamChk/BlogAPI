@@ -12,6 +12,7 @@ djoser = "*"
 drf-nested-routers = "*"
 djangorestframework-simplejwt = "*"
 whitenoise = "*"
+gunicorn = "*"
 
 [dev-packages]
 autopep8 = "*"

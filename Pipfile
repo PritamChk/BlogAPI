@@ -15,6 +15,7 @@ whitenoise = "*"
 gunicorn = "*"
 dj-database-url = "*"
 psycopg2 = "*"
+termcolor = "*"
 
 [dev-packages]
 autopep8 = "*"

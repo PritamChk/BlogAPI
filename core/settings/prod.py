@@ -6,7 +6,7 @@ SECRET_KEY = environ.get('SECRET_KEY')
 
 DEBUG = False
 
-ALLOWED_HOSTS = ["https://pritdjango-blogapi.herokuapp.com/"]
+ALLOWED_HOSTS = ["pritdjango-blogapi.herokuapp.com"]
 
 DATABASES = {
     'default': db_url.config()

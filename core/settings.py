@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     # 3rd party apps
     'rest_framework',
     'djoser',
-    # "debug_toolbar",
     'django_extensions',
     'django_filters',
     # 'drf_psq', # uninstalled
@@ -49,12 +48,12 @@ INSTALLED_APPS = [
     "blogapp",
 ]
 
-# INTERNAL_IPS = [
-#     "127.0.0.1",
-# ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    # ---------   3rd party middleware  ------------
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    # ----------------------------------------------
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -64,6 +63,13 @@ MIDDLEWARE = [
     # 3rd party middleware
     # "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
+
+if DEBUG:
+    INTERNAL_IPS = [
+        "127.0.0.1",
+    ]
+    INSTALLED_APPS += ["debug_toolbar"]
+    MIDDLEWARE += ["debug_toolbar.middleware.DebugToolbarMiddleware"]
 
 ROOT_URLCONF = 'core.urls'
 

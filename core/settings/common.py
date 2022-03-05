@@ -31,6 +31,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # 3rd party apps
+    # 'django.contrib.staticfiles',  # required for serving swagger ui's css/js files
+    'drf_yasg',
     # "debug_toolbar",
     'rest_framework',
     'djoser',
@@ -59,6 +61,16 @@ MIDDLEWARE = [
 
 
 ROOT_URLCONF = 'core.urls'
+
+
+SWAGGER_SETTINGS = {
+    "DEFAULT_AUTO_SCHEMA_CLASS": "blogapp.swagger_schema.CustomAutoSchema",
+    "LOGIN_URL": 'admin/',
+    "LOGOUT_URL":'admin/logout',
+    "OPERATIONS_SORTER":'method',
+    "TAGS_SORTER":'alpha',
+    "DOC_EXPANSION":"none",
+}
 
 TEMPLATES = [
     {
@@ -130,7 +142,9 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
-    ]
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 5,
 }
 
 SIMPLE_JWT = {

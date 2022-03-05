@@ -13,7 +13,6 @@ all_blogger_blogs.register('blog', OwnBlogViewSet, basename='blog')  # child
 # all_blogger_blogs.register('blogs', OwnerBlogListVSet, 'blogs')
 
 
-
 comment_router = NestedDefaultRouter(all_blogger_blogs, 'blog', lookup='blog')
 comment_router.register('comments', CommentVSet, basename='comments')
 

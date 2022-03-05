@@ -21,6 +21,10 @@ from .serializers import *
 
 
 class BloggerViewSet(ModelViewSet):
+    """ Blogger can retrive own details as well as others detail, but can only perform update,delete for own
+        list:
+            to get all bloggers
+    """
     http_method_names = ["get", "patch", "delete", "head", "options"]
     filter_backends = [
         DjangoFilterBackend,

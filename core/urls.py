@@ -13,10 +13,31 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.conf import settings ,urls
+from django.conf import settings, urls
 from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
+
+# DRF_YASG
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+
+
+schema_view = get_schema_view(
+    openapi.Info(
+        title="Blogapp API",
+        default_version='v1',
+        description="Test description",
+        # terms_of_service="https://www.google.com/policies/terms/",
+        # contact=openapi.Contact(email="pritam.chk98@gmail.com"),
+        # license=openapi.License(name="BSD License"),
+    ),
+    public=True,
+    permission_classes=[permissions.AllowAny],
+)
+# DRF_YASG
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,9 +46,11 @@ urlpatterns = [
     # path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     # own app routes
     path('blogapp/', include("blogapp.urls")),
+    #FIXME: drf_yasg url
+    path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]
 # urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:
     import debug_toolbar
-    urlpatterns+=path("__debug__/", include(debug_toolbar.urls)),
+    urlpatterns += path("__debug__/", include(debug_toolbar.urls)),

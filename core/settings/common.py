@@ -62,6 +62,9 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'core.urls'
 
+
+SWAGGER_SETTINGS = {"DEFAULT_AUTO_SCHEMA_CLASS": "blogapp.swagger_schema.CustomAutoSchema"}
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

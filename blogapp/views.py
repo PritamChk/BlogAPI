@@ -46,6 +46,7 @@ class BloggerViewSet(ModelViewSet):
     permission_classes = [IsAdminUser | (IsAuthenticated & IsSelf)]
     queryset = Blogger.objects.all()
     serializer_class = BloggerAdminSerializer
+    my_tags = ["Blogger"]
 
     def get_permissions(self):
         method = self.request.method
@@ -71,6 +72,7 @@ class OwnBlogViewSet(ModelViewSet):
     ordering_fields = ["title", "created_at"]
     serializer_class = BlogReadSerializer
     permission_classes = [IsAdminUser | (IsAuthenticated & IsBlogOwner)]
+    my_tags = ["Blogger-Blog"]
     # queryset = Blog.objects.prefetch_related(
     #     'comments').select_related('creator').all()
 
@@ -104,10 +106,12 @@ class AllBlogVSet(ListModelMixin, GenericViewSet):
     queryset = Blog.objects.select_related(
         'creator').prefetch_related('comments').all()
     serializer_class = BlogReadSerializer
+    my_tags = ["All Blogs"]
 
 
 class CommentVSet(ModelViewSet):
     http_method_names = ["get", "post", "patch", "delete", "option", "head"]
+    my_tags = ["Blog-Comments"]
 
     def get_permissions(self):
         if self.request.method == 'GET':

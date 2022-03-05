@@ -28,7 +28,12 @@ schema_view = get_schema_view(
     openapi.Info(
         title="Blogapp API",
         default_version='v1',
-        description="Test description",
+        description="""
+        # This is the `Blogapp API` documentation
+        
+        > ### Here all the api routes are grouped by tags
+        
+        """,
         # terms_of_service="https://www.google.com/policies/terms/",
         # contact=openapi.Contact(email="pritam.chk98@gmail.com"),
         # license=openapi.License(name="BSD License"),

@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # 3rd party apps
     # 'django.contrib.staticfiles',  # required for serving swagger ui's css/js files
+    "corsheaders",
     'drf_yasg',
     # "debug_toolbar",
     'rest_framework',
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
 
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     # ---------   3rd party middleware  ------------
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -161,3 +163,5 @@ DJOSER = {
         'current_user': "blogapp.serializers.CurrentBloggerSerializer"
     }
 }
+
+CORS_ALLOW_ALL_ORIGINS = True

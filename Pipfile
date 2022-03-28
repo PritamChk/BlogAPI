@@ -17,6 +17,7 @@ dj-database-url = "*"
 psycopg2 = "*"
 termcolor = "*"
 drf-yasg = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 autopep8 = "*"
